@@ -9,7 +9,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <title>Understand your credit card number</title>
+  <title>Credit Card Validator</title>
   <meta name="description" content="">
   <meta name="author" content="">
 	<style type="text/css">
@@ -18,19 +18,19 @@
 		ul {margin:0;padding:0;}
 		.wrapper { font-size:0.7em;width:400px;margin:0 auto;padding:.4em; }
 		#container { background:#f9f9f9;border:3px solid #eee;border:3px solid rgba(0,0,0,0.05);border-radius:5px; }
-		#header { background:#aaa;background:rgba(0,0,0,0.5);color:#fff; padding:0.4em;font-size:0.8em;text-align:center;border-radius:5px; 
-
-		}
+		#header { background:#aaa;background:rgba(0,0,0,0.5);color:#fff; padding:0.4em;font-size:0.8em;text-align:center;border-radius:5px; }
 		.results {display:block; padding:0.4em 0;}
 		#main {padding:0.2em;}
 		#ccnum { outline: none;padding:0.7em;width:94%;border:2px solid #ddd;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}
 		#ccnum:focus { border:2px solid #aaa;}
-		#validate { display:block;width:100%;padding:0.5em;}
+		#cchint {color:#aaa;padding:0.4em 0 0 0;margin:0.5em 0 0 0.2em;font-weight:bold;}
+		#validate { display:block;width:100%;padding:0.5em;margin-top:1em;}
 		#footer { color:#ccc; }
+		
 		
 		#acceptedcards {padding:0.4em;}
 		#acceptedcards li {float:left;list-style:none;}
-		.errormsg {display:block; width:300px; padding:0.4em 0 0 0;margin:0.5em 0 0 0;font-weight:bold;color:#dd3c10;}
+		#cc_errormsg {display:block; width:300px; padding:0.4em 0 0 0;margin:0.5em 0 0 0;font-weight:bold;color:#dd3c10;}
 		#ccnum.error { background-color:#ffebe8;border:2px solid #dd3c10;}
 		#ccnum.valid { background-color:#e8ffec;border:2px solid #10dd28;}
 		.hidden {display:none;}
@@ -44,6 +44,7 @@
     <header id="header">
 		<h1>Enter your credit card number</h1>
     </header>
+	<form name="ccvaldator">
 	<p style="color:#666;margin:1em 0 -1em 0.8em;">WE ACCEPT</p>
     <ul id="acceptedcards">
 		<li class="cc_visa"><img src="1333652765_visa.png" alt="" /></li>
@@ -53,15 +54,14 @@
 		<li class="cc_dinersclub"><img src="1333652751_diners_club.png" alt="" /></li>
 		<li class="cc_jcb"><img src="1333652770_jcb.png" alt="" /></li>
 	</ul>
-	<div style="clear:both"></div>
     <div id="main">
 		<input type="text" name="ccnum" id="ccnum" size="60" />
-		<p id="cchint" style="color:#aaa;padding:0.4em 0 0 0;margin:0.5em 0 0.3em 0.2em;font-weight:bold;">Eg: 4539534096584, 344874189088886, 5103675894917164</p>
-		<div id="errormsg" class="errormsg hidden"></div>
+		<p id="cchint">Eg: 4539534096584, 344874189088886, 5103675894917164</p>
+		<button id="validate">Validate</button>
 	</div>
+	</form>
 	
-    <div id="ccsum"></div>
-  </div> <!-- end of #container -->
+  </div> 
 <footer id="footer" class="wrapper">
 	Icons by <a href="http://iconshock.com" target="_top">Iconshock.com</a> and regex from <a href="http://www.regular-expressions.info/creditcard.html" target="_top">regular-expressions.info</a>
 	
@@ -79,7 +79,10 @@
 	
 		$(document).ready(function() {
 	
-		$("#ccnum").ccvalidator();
+		$("#ccnum").ccvalidator({
+			'validateon': 'keyup'
+		});
+		
 		
 		$("#ccnum").keyup(function() {
 			if($(this).val() != '') {

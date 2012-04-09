@@ -5,30 +5,51 @@
 		var cfg = {
 			'ccimgs'   : '#acceptedcards',
 			'errorclass' : 'error',
-			'validclass' : 'valid'
+			'validclass' : 'valid',
+			'validateon' : 'blur'
       	};
 
-		if ( options ) { 
+		if ( options ) {
         	$.extend( cfg, options );
      	}
 		var ccinput = $(this);
+		var ccnum = ccinput.val();
 		
+		// This code identifies the credit card issuer as the user types.
 		$(this).keyup(function () { 
-			//this.value = this.value.replace(/[^0-9\.]/g,'');
-			var cc = $(this).val();
-			cc = cc.replace(/[^0-9\.]/g,'');
+			ccnum = ccinput.val();
 
-			$(cfg.ccimgs).children('li').css('opacity', 0.1);
-			$(cfg.ccimgs).children('.'+cc_getIssuer(cc)).css('opacity', 1);
+			if(ccnum == '') {
+				cc_reset();
+				return;
+			}
+			
+			highlightIssuer();
+			
+			if($('#cc_errormsg').length != 0) {
+				cc_error(cc_validate());
+			}
+		});
 		
-			cc_error(cc_luhnvalidation(cc))
-			
-			
-			
+		// This code activates based on the user's setting for validation, default is blur.
+		$(this).bind(cfg.validateon, function () { 
+			ccnum = ccinput.val();
+			if(ccnum == '') {
+				cc_reset();
+				return;
+			}
+			cc_error(cc_validate());
 		});
 
-
-		function cc_getIssuer(ccnum) {
+		
+		function highlightIssuer() {
+			$(cfg.ccimgs).children('li').css('opacity', 0.1);
+			$(cfg.ccimgs).children('.'+cc_getIssuer()).css('opacity', 1);			
+		}
+		
+		// Returns the Credit card issuer from the known list, else returns 'cc_unknown'
+		function cc_getIssuer() {
+		
 			if(ccnum.match('^4[0-9]*$')) {
 				return 'cc_visa';
 			} else if(ccnum.match('^5[1-5][0-9]*$')) {
@@ -46,7 +67,8 @@
 			}
 		}
 		
-		function cc_luhnvalidation(ccnum) {
+		// Performs the Luhn Validation and returns True or False.
+		function cc_validate() {
 			var ccnumsum = 0;
 			var ccnumstring = ccnum.toString();
 			
@@ -68,6 +90,7 @@
 			return false;
 		}
 		
+		// Returns the sum of digits in a number.
 		function cc_stringsum(numstring) {
 			var numstring = numstring.toString();
 			var numstringsum = 0;
@@ -81,18 +104,27 @@
 			return numstringsum;
 		}
 		
+		// Sets/Unsets the error and valid classes on the elements.
 		function cc_error(show) {
 			if(!show) {
-				$('#errormsg').removeClass('hidden');
-				$('#errormsg').html('Not a valid credit card number');
+				if(!$('#cc_errormsg').length) {
+					ccinput.after('<p id="cc_errormsg" class="'+cfg.errorclass+'">Not a valid credit card number</p>');
+				}
 				ccinput.removeClass('valid');			
 				ccinput.addClass('error');				
 			} else {
-				$('#errormsg').addClass('hidden');
-				$('#errormsg').html('');
+				ccinput.siblings('#cc_errormsg').remove();
 				ccinput.removeClass('error');			
 				ccinput.addClass('valid');				
 			}
+		}
+		
+		// Resets the html and css on all the elements
+		function cc_reset() {
+			$(cfg.ccimgs).children('li').css('opacity', 1);
+			ccinput.siblings('#cc_errormsg').remove();
+			ccinput.removeClass('error valid');			
+			return;
 		}
 
 
