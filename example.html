@@ -23,9 +23,9 @@
 		#main {padding:0.2em;}
 		#ccnum { outline: none;padding:0.7em;width:94%;border:2px solid #ddd;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;}
 		#ccnum:focus { border:2px solid #aaa;}
-		#cchint {color:#aaa;padding:0.4em 0 0 0;margin:0.5em 0 0 0.2em;font-weight:bold;}
+		#cchint {color:#aaa;padding:0.4em 0 0 0;margin:0.5em 0 0 0.2em;font-weight:bold;font-size:11px;}
 		#validate { display:block;width:100%;padding:0.5em;margin-top:1em;}
-		#footer { color:#ccc; }
+		#footer { color:#ccc; font-size:11px;}
 		
 		
 		#acceptedcards {padding:0.4em;}
@@ -41,11 +41,11 @@
 <body>
 
   <div id="container" class="wrapper">
-    <header id="header">
+    <div id="header">
 		<h1>Enter your credit card number</h1>
-    </header>
+    </div>
 	<form name="ccvaldator">
-	<p style="color:#666;margin:1em 0 -1em 0.8em;">WE ACCEPT</p>
+	<p style="color:#666;margin:1em 0 -1em 0.8em;font-size:10px;">WE ACCEPT</p>
     <ul id="acceptedcards">
 		<li class="cc_visa"><img src="1333652765_visa.png" alt="" /></li>
 		<li class="cc_mastercard"><img src="1333652766_mastercard.png" alt="" /></li>
@@ -62,11 +62,12 @@
 	</form>
 	
   </div> 
-<footer id="footer" class="wrapper">
+  
+<div id="footer" class="wrapper">
 	Icons by <a href="http://iconshock.com" target="_top">Iconshock.com</a> and regex from <a href="http://www.regular-expressions.info/creditcard.html" target="_top">regular-expressions.info</a>
 	
 	
-</footer>
+</div>
 
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
@@ -84,12 +85,8 @@
 		});
 		
 		
-		$("#ccnum").keyup(function() {
-			if($(this).val() != '') {
-				$('#cchint').hide();
-			} else {
-				$('#cchint').show();
-			}
+		$("#validate").click(function(e) {
+			e.preventDefault();
 		});
 		
 		
